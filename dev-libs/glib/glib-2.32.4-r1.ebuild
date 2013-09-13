@@ -1,10 +1,9 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-libs/glib/glib-2.32.4-r1.ebuild,v 1.6 2012/10/06 21:17:44 blueness Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-libs/glib/glib-2.32.4-r1.ebuild,v 1.15 2013/08/14 04:19:30 tetromino Exp $
 
 EAPI="4"
-PYTHON_DEPEND="utils? 2"
-# Avoid runtime dependency on python when USE=test
+PYTHON_DEPEND="utils? 2" # Avoid runtime dependency on python when USE=test
 
 inherit autotools gnome.org libtool eutils flag-o-matic gnome2-utils multilib pax-utils python toolchain-funcs virtualx linux-info
 
@@ -16,26 +15,24 @@ SRC_URI="${SRC_URI}
 
 LICENSE="LGPL-2+"
 SLOT="2"
-IUSE="debug doc fam kernel_linux selinux static-libs systemtap test utils xattr"
-KEYWORDS="~alpha amd64 arm hppa ~ia64 ~m68k ~mips ppc ppc64 ~s390 ~sh ~sparc x86 ~amd64-fbsd ~sparc-fbsd ~x86-fbsd ~amd64-linux ~x86-linux"
+IUSE="debug fam kernel_linux selinux static-libs systemtap test utils xattr"
+KEYWORDS="alpha amd64 arm hppa ia64 m68k ~mips ppc ppc64 s390 sh sparc x86 ~amd64-fbsd ~sparc-fbsd ~x86-fbsd ~amd64-linux ~x86-linux"
 
 RDEPEND="virtual/libiconv
 	virtual/libffi
 	sys-libs/zlib
 	|| (
 		>=dev-libs/elfutils-0.142
-		>=dev-libs/libelf-0.8.12 )
+		>=dev-libs/libelf-0.8.12
+		>=sys-freebsd/freebsd-lib-9.2_rc1
+		)
+	selinux? ( sys-libs/libselinux )
 	xattr? ( sys-apps/attr )
 	fam? ( virtual/fam )
 	utils? ( >=dev-util/gdbus-codegen-${PV} )"
 DEPEND="${RDEPEND}
 	>=sys-devel/gettext-0.11
 	>=dev-util/gtk-doc-am-1.15
-	doc? (
-		>=dev-libs/libxslt-1.0
-		>=dev-util/gdbus-codegen-${PV}
-		>=dev-util/gtk-doc-1.15
-		~app-text/docbook-xml-dtd-4.1.2 )
 	systemtap? ( >=dev-util/systemtap-1.3 )
 	test? (
 		sys-devel/gdb
@@ -43,7 +40,8 @@ DEPEND="${RDEPEND}
 		>=dev-util/gdbus-codegen-${PV}
 		>=sys-apps/dbus-1.2.14 )
 	!<dev-util/gtk-doc-1.15-r2"
-PDEPEND="!<gnome-base/gvfs-1.6.4-r990"
+PDEPEND="x11-misc/shared-mime-info
+	!<gnome-base/gvfs-1.6.4-r990"
 # shared-mime-info needed for gio/xdgmime, bug #409481
 # Earlier versions of gvfs do not work with glib
 
@@ -68,8 +66,7 @@ src_prepare() {
 	# Fix gmodule issues on fbsd; bug #184301
 	epatch "${FILESDIR}"/${PN}-2.12.12-fbsd.patch
 
-	# need to build tests if USE=doc for bug #387385
-	if ! use test && ! use doc; then
+	if ! use test; then
 		# don't waste time building tests
 		sed 's/^\(.*\SUBDIRS .*\=.*\)tests\(.*\)$/\1\2/' -i $(find . -name Makefile.am -o -name Makefile.in) || die
 	else
@@ -112,6 +109,14 @@ src_prepare() {
 	# AS_IF fixes from 2.33.x, needed for cross-compiling, bug #434770
 	epatch ../AS_IF-patches/*.patch
 
+	# https://bugzilla.gnome.org/show_bug.cgi?id=679306
+	epatch "${FILESDIR}/${PN}-2.34.0-testsuite-skip-thread4.patch"
+
+	# build failure with automake-1.13; fixed upstream in 2.36
+	epatch "${FILESDIR}/${PN}-2.34.3-automake-1.13.patch"
+
+	epatch_user
+
 	# disable pyc compiling
 	use test && python_clean_py-compile_files
 
@@ -149,8 +154,6 @@ src_configure() {
 	# Always use internal libpcre, bug #254659
 	econf ${myconf} \
 		$(use_enable xattr) \
-		$(use_enable doc man) \
-		$(use_enable doc gtk-doc) \
 		$(use_enable fam) \
 		$(use_enable selinux) \
 		$(use_enable static-libs static) \

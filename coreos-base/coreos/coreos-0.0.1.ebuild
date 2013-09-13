@@ -149,10 +149,12 @@ RDEPEND="${RDEPEND}
 	app-emulation/docker
 	app-misc/ca-certificates
 	virtual/udev
+	app-misc/playbox
 	dev-db/etcd
 	dev-db/etcdctl
 	net-fs/nfs-utils
 	net-misc/iputils
+	app-arch/pbzip2
 	"
 
 # TODO(dianders):

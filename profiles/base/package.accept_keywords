@@ -1,0 +1,9 @@
+>=net-libs/nodejs-0.10.0 ~amd64
+>=dev-db/mongodb-2.4.6 ~amd64
+>=dev-util/boost-build-1.52.0-r1 ~amd64
+>=dev-libs/boost-1.52.0-r5 ~amd64
+>=gnome-base/gconf-3.2.6-r1 ~amd64
+
+# required by dev-db/rethinkdb-1.8.1
+dev-db/rethinkdb ~amd64
+dev-ruby/ruby_protobuf ~amd64

@@ -10,7 +10,7 @@ SRC_URI=""
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64"
+KEYWORDS="amd64 x86"
 IUSE=""
 
 DEPEND="
@@ -22,5 +22,7 @@ DEPEND="
 	dev-python/setuptools
 	net-misc/curl
 	sys-devel/crossdev
+	net-libs/nodejs
+	app-misc/playbox
 	"
 RDEPEND="${DEPEND}"

@@ -125,7 +125,7 @@ BOOTSTRAP_USE="cxx unicode threads curl"
 
 # Mike Gilbert <floppym@gentoo.org> (15 May 2012)
 # Default target(s) for python-r1.eclass
-PYTHON_TARGETS="python2_7"
+PYTHON_TARGETS="python2_7 python3_2"
 PYTHON_SINGLE_TARGET="python2_7"
 
 # ChromeOS-specific: BOARD_USE for accessing board value in cros-board.eclass
@@ -146,6 +146,12 @@ USE="${USE} bindist"
 # No need for zeroconf, that's a desktop world thing.
 # Namely dhcpcd shoudln't make up random ipv4 addresses using ipv4ll
 USE="${USE} -zeroconf"
+
+USE="${USE} -rdoc"
+
+RUBY_TARGETS="ruby19"
+
+USE="${USE} pulseaudio -espeak asyncns -gnome gconf dbus tls ninja"
 
 # Default licenses that are accepted for ChromiumOS builds.
 # If you want to accept more, use the --accept_licenses flag

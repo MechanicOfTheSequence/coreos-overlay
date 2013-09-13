@@ -11,3 +11,22 @@ dev-libs/libpcre unicode
 # USE X needs to be always enabled to force virtualx
 # eclass usage for Xeconf.
 media-sound/rubyripper X
+
+net-libs/nodejs npm
+>=dev-libs/libxml2-2.9.0 icu
+sys-libs/zlib minizip
+x11-misc/xdg-utils perl
+x11-libs/cairo X
+#dev-db/mongodb embedded-v8
+dev-db/redis jemalloc
+
+net-print/cups dbus
+net-print/foomatic-filters cups
+app-text/ghostscript-gpl cups
+virtual/udev hwdb
+app-misc/playbox ninja cups
+
+# required by dev-db/rethinkdb
+dev-libs/protobuf static-libs
+dev-util/google-perftools static-libs
+dev-ruby/rubygems ruby_targets_ruby19
